@@ -1,5 +1,6 @@
 
 const { v4: uuidv4 } = require('uuid');
+const {validationResult} = require('express-validator')
 
 const HttpError = require('../models/http-error');
 
@@ -51,6 +52,7 @@ const getPlacesByUserId = (req, res, next) => {
 };
 
 const createPlace = (req, res, next) => {
+  validationResult(req)
   const { title, description, coordinates, address, creator } = req.body;
   // const title = req.body.title;
   const createdPlace = {
