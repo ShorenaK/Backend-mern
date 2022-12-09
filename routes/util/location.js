@@ -16,5 +16,8 @@ async function getCoordsForAddress(address){
    throw error
   }
   const coordinates = data.results[0].geomatry.location;
+
   return coordinates;
 }
+
+module.exports = getCoordsForAddress
