@@ -1,12 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const mangoose = require('mongoose')
-const connectionStr = process.env.MONGODB_URL
+const mongoose = require('mongoose')
+require('dotenv').config()
+const connectionStr = process.env.MONGODB_URI
 
 const placesRoutes = require('./routes/places-routes');
 const usersRoutes = require('./routes/users-routes');
 const HttpError = require('./models/http-error');
-const { default: mongoose } = require('mongoose');
+// const { default: mongoose } = require('mongoose');
 
 const app = express();
 
@@ -27,8 +28,8 @@ app.use((error, req, res, next) => {
   res.status(error.code || 500)
   res.json({message: error.message || 'An unknown error occurred!'});
 });
-mongoose
-.connection(connectionStr)
+
+mongoose.connect(connectionStr)
 .then(()=>{
   app.listen(7000);
 })
