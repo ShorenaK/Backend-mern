@@ -5,11 +5,14 @@ const mongoose = require('mongoose');
 
 require("dotenv").config()
 const connectionStr = process.env.MONGODB_URI
+mongoose.set('strictQuery', false);
 
 const placesRoutes = require('./routes/places-routes');
 const usersRoutes = require('./routes/users-routes');
 const HttpError = require('./models/http-error');
+const place = require('./models/place');
 
+app.use(express.json())
 
 app.use(bodyParser.json());
 
@@ -28,6 +31,7 @@ app.use((error, req, res, next) => {
   res.status(error.code || 500);
   res.json({ message: error.message || 'An unknown error occurred!' });
 });
+
 
 mongoose
   .connect(connectionStr)

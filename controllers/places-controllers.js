@@ -4,6 +4,9 @@ const { validationResult } = require('express-validator');
 const HttpError = require('../models/http-error');
 const getCoordsForAddress = require('../util/location');
 const Place = require('../models/place');
+// const mongoURI = process.env.MONGODB_URI;
+// const mongoose = require('mongoose')
+// mongoose.connect(mongoURI)
 
 let DUMMY_PLACES = [
   {
@@ -77,7 +80,7 @@ const createPlace = async (req, res, next) => {
     location: coordinates,
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Empire_State_Building_%28aerial_view%29.jpg/400px-Empire_State_Building_%28aerial_view%29.jpg',
     creator
-  });
+  })
 
   try {
     await createdPlace.save();
@@ -88,9 +91,9 @@ const createPlace = async (req, res, next) => {
     );
     return next(error);
   }
-  
   res.status(201).json({ place: createdPlace });
 };
+
 
 const updatePlace = (req, res, next) => {
   const errors = validationResult(req);
