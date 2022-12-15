@@ -19,7 +19,6 @@ let DUMMY_PLACES = [
     creator: 'u1'
   }
 ];
-
 const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid; // { pid: 'p1' }
 
@@ -33,7 +32,6 @@ const getPlaceById = async (req, res, next) => {
     );
     return next(error);
   }
-
   if (!place) {
     const error = new HttpError(
       'Could not find a place for the provided id.',
@@ -44,10 +42,8 @@ const getPlaceById = async (req, res, next) => {
 
   res.json({ place: place.toObject({ getters: true }) }); // => { place } => { place: place }
 };
-
 // function getPlaceById() { ... }
 // const getPlaceById = function() { ... }
-
 const getPlacesByUserId = async (req, res, next) => {
   const userId = req.params.uid;
 
@@ -56,7 +52,7 @@ const getPlacesByUserId = async (req, res, next) => {
     places = await Place.find({ creator: userId });
   } catch (err) {
     const error = new HttpError(
-      'Fetching places failed, please try again later',
+      'Fetching places failed, please try again later.',
       500
     );
     return next(error);
@@ -87,7 +83,6 @@ const createPlace = async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
-
   // const title = req.body.title;
   const createdPlace = new Place({
     title,
@@ -131,10 +126,8 @@ const updatePlace = async (req, res, next) => {
     );
     return next(error);
   }
-
   place.title = title;
   place.description = description;
-
   try {
     await place.save();
   } catch (err) {
