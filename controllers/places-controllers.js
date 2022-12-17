@@ -5,7 +5,8 @@ const { validationResult } = require('express-validator');
 const HttpError = require('../models/http-error');
 const getCoordsForAddress = require('../util/location');
 const Place = require('../models/place');
-const User = require('../models/user')
+const User = require('../models/user');
+const { default: mongoose } = require('mongoose');
 
 let DUMMY_PLACES = [
   {
@@ -114,7 +115,13 @@ if(!user){
 console.log(user)
 
   try {
-    await createdPlace.save();
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+     await createdPlace.save({session: sess});
+     user.places.push(createdPlace);
+     
+    
+
   } catch (err) {
     const error = new HttpError(
       'Creating place failed, please try again.',
