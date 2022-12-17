@@ -5,6 +5,7 @@ const { validationResult } = require('express-validator');
 const HttpError = require('../models/http-error');
 const getCoordsForAddress = require('../util/location');
 const Place = require('../models/place');
+const User = require('../models/user')
 
 let DUMMY_PLACES = [
   {
@@ -93,6 +94,24 @@ const createPlace = async (req, res, next) => {
       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Empire_State_Building_%28aerial_view%29.jpg/400px-Empire_State_Building_%28aerial_view%29.jpg',
     creator
   });
+
+let user; 
+try{
+user = await User.findById(creator)
+}catch (err) {
+const error = new HttpError(
+  'Creating place faild, please try again.', 
+  500
+)
+return next(error)
+}
+
+if(!user){
+  const error = new HttpError(
+    'Could not find user for provided id', 404 )
+    return next (error)
+}
+console.log(user)
 
   try {
     await createdPlace.save();
