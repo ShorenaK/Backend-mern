@@ -12,9 +12,21 @@ const usersRoutes = require('./routes/users-routes');
 const HttpError = require('./models/http-error');
 const place = require('./models/place');
 
-app.use(express.json())
+// app.use(express.json())
 
 app.use(bodyParser.json());
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  );
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+
+  next();
+});
+
 
 app.use('/api/places', placesRoutes); 
 app.use('/api/users', usersRoutes);
@@ -44,13 +56,13 @@ mongoose
 
 
 
-  mongoose.connection.on('connected', () => {
-    console.log(`[${new Date().toLocaleTimeString()}] - MongoDB connected ... 🙌 🙌 🙌`); 
-  });
-mongoose.connection.on('error', (error) => {
-    console.log('MongoDB connection error 😥', error);
-  });
-mongoose.connection.on('disconnected', () => console.log('MongoDB disconnected  ⚡️ 🔌 ⚡️'));
+//   mongoose.connection.on('connected', () => {
+//     console.log(`[${new Date().toLocaleTimeString()}] - MongoDB connected ... 🙌 🙌 🙌`); 
+//   });
+// mongoose.connection.on('error', (error) => {
+//     console.log('MongoDB connection error 😥', error);
+//   });
+// mongoose.connection.on('disconnected', () => console.log('MongoDB disconnected  ⚡️ 🔌 ⚡️'));
 
 
 

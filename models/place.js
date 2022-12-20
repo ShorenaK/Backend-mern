@@ -4,7 +4,7 @@ const mongoURI = process.env.MONGODB_URI;
  mongoose.connect(mongoURI)
 
 
- const mongoose = require('mongoose');
+
 
  const Schema = mongoose.Schema;
  
