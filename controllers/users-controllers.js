@@ -1,7 +1,6 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs')
 
-
 const HttpError = require('../models/http-error');
 const User = require('../models/user');
 
@@ -26,9 +25,7 @@ const signup = async (req, res, next) => {
       new HttpError('Invalid inputs passed, please check your data.', 422)
     );
   }
-
   const { name, email, password } = req.body;
-
   let existingUser;
   try {
     existingUser = await User.findOne({ email: email });
@@ -39,7 +36,6 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
-
   if (existingUser) {
     const error = new HttpError(
       'User exists already, please login instead.',
@@ -51,7 +47,6 @@ let hashedPassword;
 // hash and salt == 12
 try{
  hashedPassword  = await bcrypt.hash(password, 12)
-
 }catch(err){
   const error = new HttpError(
     "Could not create user, please try again.", 
@@ -59,7 +54,6 @@ try{
   )
   return next(error)
 }
-
   const createdUser = new User({
     name,
     email,
@@ -67,7 +61,6 @@ try{
     password: hashedPassword,
     places: [],
   });
-
   try {
     await createdUser.save();
   } catch (err) {
@@ -85,7 +78,6 @@ const login = async (req, res, next) => {
   const { email, password } = req.body;
 
   let existingUser;
-
   try {
     existingUser = await User.findOne({ email: email });
   } catch (err) {
@@ -95,7 +87,6 @@ const login = async (req, res, next) => {
     );
     return next(error);
   }
-
   if (!existingUser || existingUser.password !== password) {
     const error = new HttpError(
       'Invalid credentials, could not log you in.',
@@ -103,6 +94,25 @@ const login = async (req, res, next) => {
     );
     return next(error);
   }
+
+  let isValidPassword = false
+  try {
+    isValidPassword = await bcrypt.compare(password, existingUser.password)
+  }catch(err){
+    const error = new HttpError(
+      'Could not log you in, please check you credentials and try again.',
+      500
+    )
+    return error
+  }
+if(!isValidPassword){
+  const error = new HttpError(
+    'Invalid credentials, could not log you in.',
+    401
+  );
+  return next(error);
+}
+
 
   res.json({
     message: 'Logged in!',
